@@ -50,6 +50,7 @@ namespace leantime\domain\controllers {
 
                 if (isset($_POST['save']) === true) {
 
+                    echo json_encode($_POST);exit();
                     $values = array(
                         'name' => ($_POST['name']),
                         'street' => ($_POST['street']),
