@@ -47,7 +47,7 @@ namespace leantime\domain\controllers {
                     'email' => ''
                 );
 
-
+                echo json_encode($_POST);exit();
                 if (isset($_POST['save']) === true) {
 
                     echo json_encode($_POST);exit();
