@@ -22,7 +22,7 @@ namespace leantime\domain\controllers {
 			$language = new core\language();
 
             $headerAccepts = getallheaders()['Accept'];
-            $isApiCall = (isset($headerAccepts) && explode(',',$headerAccepts)[0] == 'application/json');
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
 
 			$values = array(
