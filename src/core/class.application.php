@@ -90,7 +90,11 @@ class application
 
             $uri = $_SERVER['REQUEST_URI'];
 
-            $this->projectService->setCurrentProject();
+            if(!$isApiCall)
+            {
+                $this->projectService->setCurrentProject();
+            }
+
 
             //Run frontcontroller
             $frontController->run();
