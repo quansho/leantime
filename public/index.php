@@ -39,7 +39,7 @@ $application = new leantime\core\application(
                         new leantime\core\language(),
                         new leantime\domain\services\projects(),
                         new leantime\domain\repositories\setting());
-echo  555;
+echo  555;exit();
 $application->start();
 
 if(ob_get_length() > 0) {
