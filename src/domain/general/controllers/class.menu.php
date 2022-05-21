@@ -20,7 +20,7 @@ namespace leantime\domain\controllers {
 
             $tpl->assign('current', explode(".", core\FrontController::getCurrentRoute()));
             $tpl->assign('allProjects', $allprojects);
-            $tpl->assign('currentProject', $_SESSION['currentProject']);
+//            $tpl->assign('currentProject', $_SESSION['currentProject']);
 
 
             $tpl->assign("ticketMenuLink", $ticketService->getLastTicketViewUrl());
