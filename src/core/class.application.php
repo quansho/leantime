@@ -55,7 +55,8 @@ class application
         $frontController = $this->frontController;
         $language = $this->language;
 
-
+        $headerAccepts = getallheaders()['Accept'];
+        $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
         //Override theme settings
         $this->overrideThemeSettings();
@@ -89,7 +90,7 @@ class application
 
             $uri = $_SERVER['REQUEST_URI'];
 
-            if(!substr( $uri, 0, 4 ) === "/api")
+            if(!$isApiCall)
             {
                 $this->projectService->setCurrentProject();
             }
