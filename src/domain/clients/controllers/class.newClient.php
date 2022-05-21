@@ -77,18 +77,32 @@ namespace leantime\domain\controllers {
                             }
                         } else {
                             if($isApiCall)
-                            {  echo  1;return;
+                            {
+
                                 $id = $clientRepo->getClientByEmail($values['email'])['id'];
                                 echo json_encode(['id'=>$id]);
                                 return ;
 
                             }else{
-                                $tpl->setNotification($language->__('notification.client_exists_already'), 'error');
+
+                                if($isApiCall)
+                                {
+                                    echo json_encode(['message'=>__('notification.client_exists_already')]);
+                                    return;
+                                }else{
+                                    $tpl->setNotification($language->__('notification.client_exists_already'), 'error');
+                                }
                             }
 
                         }
                     } else {
-                        $tpl->setNotification($language->__('notification.client_name_not_specified'), 'error');
+                        if($isApiCall)
+                        {
+                            echo json_encode(['message'=>__('notification.client_exists_already')]);
+                            return;
+                        }else{
+                            $tpl->setNotification($language->__('notification.client_name_not_specified'), 'error');
+                        }
                     }
 
                 }
