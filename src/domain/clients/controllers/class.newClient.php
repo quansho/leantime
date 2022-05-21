@@ -105,15 +105,27 @@ namespace leantime\domain\controllers {
                     }
 
                 }
-                echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
-                $tpl->assign('values', $values);
-                $tpl->display('clients.newClient');
+
+                if(!$isApiCall)
+                {
+                    $tpl->assign('values', $values);
+                    $tpl->display('clients.newClient');
+                }else{
+                    echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
+                }
+
 
 
             } else {
 
-                echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
-                $tpl->display('general.error');
+                if(!$isApiCall)
+                {
+                    $tpl->display('general.error');
+                }else{
+                    echo json_encode(['message'=>__('error')]);exit();
+                }
+
+
 
             }
 
