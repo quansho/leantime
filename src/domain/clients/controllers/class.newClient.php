@@ -47,9 +47,11 @@ namespace leantime\domain\controllers {
                     'email' => ''
                 );
 
+                echo json_encode(['id'=>'before_save']);
+
                 if (isset($_POST['save']) === true) {
 
-
+                    echo json_encode(['id'=>'save_true']);
                     $values = array(
                         'name' => ($_POST['name']),
                         'street' => ($_POST['street']),
@@ -65,6 +67,7 @@ namespace leantime\domain\controllers {
 
                     if ($values['name'] !== '') {
                         if ($clientRepo->isClient($values) !== true) {
+                            echo json_encode(['id'=>'new_client']);
 
                             $id = $clientRepo->addClient($values);
                             $tpl->setNotification($language->__('notification.client_added_successfully'), 'success');
@@ -76,6 +79,8 @@ namespace leantime\domain\controllers {
                                 $tpl->redirect(BASE_URL."/clients/showClient/".$id);
                             }
                         } else {
+                            echo json_encode(['id'=>'firstr_else']);
+
                             if($isApiCall)
                             {
 
@@ -96,6 +101,8 @@ namespace leantime\domain\controllers {
 
                         }
                     } else {
+                        echo json_encode(['id'=>'firstrrrr_else']);
+
                         if($isApiCall)
                         {
                             echo json_encode(['message'=>__('notification.client_exists_already')]);
