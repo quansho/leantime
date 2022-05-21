@@ -87,7 +87,7 @@ namespace leantime\domain\controllers {
 
                                 if($isApiCall)
                                 {
-                                    echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
+                                    echo json_encode(['message'=>$language->__('notification.client_exists_already')]);exit();
                                 }else{
                                     $tpl->setNotification($language->__('notification.client_exists_already'), 'error');
                                 }
@@ -98,7 +98,7 @@ namespace leantime\domain\controllers {
 
                         if($isApiCall)
                         {
-                            echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
+                            echo json_encode(['message'=>$language->__('notification.client_exists_already')]);exit();
                         }else{
                             $tpl->setNotification($language->__('notification.client_name_not_specified'), 'error');
                         }
@@ -111,7 +111,7 @@ namespace leantime\domain\controllers {
                     $tpl->assign('values', $values);
                     $tpl->display('clients.newClient');
                 }else{
-                    echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
+                    echo json_encode(['message'=>$language->__('notification.client_exists_already')]);exit();
                 }
 
 
