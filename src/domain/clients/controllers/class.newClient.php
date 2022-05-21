@@ -112,7 +112,7 @@ namespace leantime\domain\controllers {
 
             } else {
 
-
+                echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
                 $tpl->display('general.error');
 
             }
