@@ -20,7 +20,7 @@ namespace leantime\domain\controllers {
          */
         public function run()
         {
-
+echo  555;
             $tpl = new core\template();
             $clientRepo = new repositories\clients();
             $user = new repositories\users();
