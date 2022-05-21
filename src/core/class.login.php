@@ -386,10 +386,25 @@ namespace leantime\core {
          * logged_in - Check if logged in and Update sessions
          *
          * @access public
-         * @return unknown_type
+         * @return bool
          */
         public function logged_in()
         {
+
+            if(isset($_SERVER['HTTP_BOOKA_ACCESS_TOKEN']) && base64_decode($_SERVER['HTTP_BOOKA_ACCESS_TOKEN']) === $this->config->intranetAccessToken)
+            {
+
+                $this->getUserByLogin($this->config->intranetUserName,$this->config->intranetUserPass);
+
+                $this->setSession();
+
+                $this->updateUserSession($this->session, time());
+
+                $this->setCookie($this->cookieTime);
+
+                return true;
+            }
+
 
 
             try{
