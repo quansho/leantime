@@ -30,6 +30,7 @@ namespace leantime\domain\controllers {
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
+            echo json_encode(['id'=>'vapshe']);
 
             //Only admins
             if(core\login::userIsAtLeast("manager")) {
