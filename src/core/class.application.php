@@ -2,8 +2,10 @@
 
 namespace leantime\core;
 
+
 use leantime\domain\services;
 use leantime\domain\repositories;
+
 
 class application
 {
@@ -15,6 +17,7 @@ class application
     private $language;
     private $projectService;
     private $settingsRepo;
+    private $apiService;
 
 
     public function __construct(config $config,
@@ -23,7 +26,8 @@ class application
                                 frontcontroller $frontController,
                                 language $language,
                                 services\projects $projectService,
-                                repositories\setting $settingRepo)
+                                repositories\setting $settingRepo
+    )
     {
 
         $this->config = $config;
@@ -50,6 +54,8 @@ class application
         $login = $this->login;
         $frontController = $this->frontController;
         $language = $this->language;
+
+
 
         //Override theme settings
         $this->overrideThemeSettings();
@@ -81,14 +87,19 @@ class application
                $login->redirect2FA($_SERVER['REQUEST_URI']);
             }
 
-            //Set current/default project
-            $this->projectService->setCurrentProject();
+            $uri = $_SERVER['REQUEST_URI'];
+
+            if(!substr( $uri, 0, 4 ) === "/api")
+            {
+                $this->projectService->setCurrentProject();
+            }
 
             //Run frontcontroller
             $frontController->run();
         }
 
         $toRender = ob_get_clean();
+
         echo $toRender;
             
     }

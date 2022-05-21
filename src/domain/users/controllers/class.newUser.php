@@ -2,9 +2,8 @@
 
 namespace leantime\domain\controllers {
 
-	use leantime\core;
+    use leantime\core;
 	use leantime\domain\repositories;
-	use leantime\domain\services;
 
 	class newUser
 	{
@@ -21,6 +20,10 @@ namespace leantime\domain\controllers {
 			$userRepo = new repositories\users();
 			$project = new repositories\projects();
 			$language = new core\language();
+
+            $headerAccepts = getallheaders()['Accept'];
+            $isApiCall = (isset($headerAccepts) && explode(',',$headerAccepts)[0] == 'application/json');
+
 
 			$values = array(
 				'firstname' => "",
@@ -90,19 +93,24 @@ namespace leantime\domain\controllers {
 
 									} else {
 
-										$tpl->setNotification($language->__("notification.user_exists"), 'error');
+                                        $messageInfo = $language->__("notification.user_exists");
+
+                                            if($isApiCall)
+                                            {
+                                                echo json_encode(['message'=>$messageInfo,'type'=>'error'],301);
+                                                return;
+                                            }else{
+                                                $tpl->setNotification($messageInfo, 'error');
+                                            }
 
 									}
 								} else {
-
 									$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 								}
 							} else {
-
 								$tpl->setNotification($language->__("notification.no_valid_email"), 'error');
 							}
 						} else {
-
 
 							$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 
