@@ -105,7 +105,7 @@ namespace leantime\domain\controllers {
                     }
 
                 }
-
+                echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
                 $tpl->assign('values', $values);
                 $tpl->display('clients.newClient');
 
