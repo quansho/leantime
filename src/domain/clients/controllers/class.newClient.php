@@ -75,7 +75,7 @@ namespace leantime\domain\controllers {
                             if($isApiCall)
                             {
                                 echo json_encode(['id'=>$id]);
-                                return ;
+
                             }else{
                                 $tpl->redirect(BASE_URL."/clients/showClient/".$id);
                             }
@@ -87,14 +87,12 @@ namespace leantime\domain\controllers {
 
                                 $id = $clientRepo->getClientByEmail($values['email'])['id'];
                                 echo json_encode(['id'=>$id]);
-                                return ;
 
                             }else{
 
                                 if($isApiCall)
                                 {
                                     echo json_encode(['message'=>__('notification.client_exists_already')]);
-                                    return;
                                 }else{
                                     $tpl->setNotification($language->__('notification.client_exists_already'), 'error');
                                 }
@@ -107,7 +105,6 @@ namespace leantime\domain\controllers {
                         if($isApiCall)
                         {
                             echo json_encode(['message'=>__('notification.client_exists_already')]);
-                            return;
                         }else{
                             $tpl->setNotification($language->__('notification.client_name_not_specified'), 'error');
                         }
