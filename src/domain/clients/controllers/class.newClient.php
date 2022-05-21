@@ -28,7 +28,7 @@ namespace leantime\domain\controllers {
 
 
             $headerAccepts = getallheaders()['Accept'];
-            $isApiCall = (isset($headerAccepts) && explode(',',$headerAccepts)[0] == 'application/json');
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
 
             //Only admins
