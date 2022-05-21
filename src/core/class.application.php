@@ -92,7 +92,7 @@ class application
 
             if(!$isApiCall)
             {
-//                $this->projectService->setCurrentProject();
+                $this->projectService->setCurrentProject();
             }
 
             //Run frontcontroller

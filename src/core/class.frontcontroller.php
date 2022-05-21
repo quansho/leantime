@@ -104,8 +104,6 @@ namespace leantime\core {
                 //execute action
                 try {
 
-                    echo $completeName;exit();
-
                     $this->executeAction($completeName);
 
                 } catch (Exception $e) {

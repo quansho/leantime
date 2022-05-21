@@ -41,7 +41,7 @@
 
         <div class="leftmenu">
 
-            <?php echo $frontController->includeAction('general.menu'); ?>
+<!--            --><?php //echo $frontController->includeAction('general.menu'); ?>
 
         </div><!--leftmenu-->
 

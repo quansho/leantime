@@ -25,7 +25,7 @@ namespace leantime\domain\controllers {
 
             $tpl->assign("ticketMenuLink", $ticketService->getLastTicketViewUrl());
 
-            $tpl->displayPartial('general.menu');
+//            $tpl->displayPartial('general.menu');
 
         }
 
