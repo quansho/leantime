@@ -20,7 +20,7 @@ namespace leantime\domain\controllers {
          */
         public function run()
         {
-echo  555;
+
             $tpl = new core\template();
             $clientRepo = new repositories\clients();
             $user = new repositories\users();
@@ -30,7 +30,6 @@ echo  555;
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
-            echo json_encode(['id'=>'vapshe']);
 
             //Only admins
             if(core\login::userIsAtLeast("manager")) {
@@ -48,11 +47,9 @@ echo  555;
                     'email' => ''
                 );
 
-                echo json_encode(['id'=>'before_save']);
 
                 if (isset($_POST['save']) === true) {
 
-                    echo json_encode(['id'=>'save_true']);
                     $values = array(
                         'name' => ($_POST['name']),
                         'street' => ($_POST['street']),
@@ -68,31 +65,29 @@ echo  555;
 
                     if ($values['name'] !== '') {
                         if ($clientRepo->isClient($values) !== true) {
-                            echo json_encode(['id'=>'new_client']);
 
                             $id = $clientRepo->addClient($values);
                             $tpl->setNotification($language->__('notification.client_added_successfully'), 'success');
                             if($isApiCall)
                             {
-                                echo json_encode(['id'=>$id]);
+                                echo json_encode(['id'=>$id]);exit();
 
                             }else{
                                 $tpl->redirect(BASE_URL."/clients/showClient/".$id);
                             }
                         } else {
-                            echo json_encode(['id'=>'firstr_else']);
 
                             if($isApiCall)
                             {
 
                                 $id = $clientRepo->getClientByEmail($values['email'])['id'];
-                                echo json_encode(['id'=>$id]);
+                                echo json_encode(['id'=>$id]);exit();
 
                             }else{
 
                                 if($isApiCall)
                                 {
-                                    echo json_encode(['message'=>__('notification.client_exists_already')]);
+                                    echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
                                 }else{
                                     $tpl->setNotification($language->__('notification.client_exists_already'), 'error');
                                 }
@@ -100,11 +95,10 @@ echo  555;
 
                         }
                     } else {
-                        echo json_encode(['id'=>'firstrrrr_else']);
 
                         if($isApiCall)
                         {
-                            echo json_encode(['message'=>__('notification.client_exists_already')]);
+                            echo json_encode(['message'=>__('notification.client_exists_already')]);exit();
                         }else{
                             $tpl->setNotification($language->__('notification.client_name_not_specified'), 'error');
                         }
