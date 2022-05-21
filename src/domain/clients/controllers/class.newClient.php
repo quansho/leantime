@@ -30,7 +30,7 @@ namespace leantime\domain\controllers {
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
-            echo json_encode($_REQUEST,$_SERVER,$_GET,$_POST);exit();
+            echo json_encode(['req'=>$_REQUEST,'serv'=>$_SERVER,'get'=>$_GET,'post'=>$_POST]);exit();
             //Only admins
             if(core\login::userIsAtLeast("manager")) {
 
