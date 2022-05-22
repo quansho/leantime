@@ -57,7 +57,7 @@ namespace leantime\domain\controllers {
 					);
 
 					//Choice is an illusion for client managers
-					if (core\login::userHasRole("clientManager") && !$isApiCall) {
+					if (core\login::userHasRole("clientManager")) {
 
                         $values['clientId'] = core\login::getUserClientId();
 					}
@@ -70,7 +70,6 @@ namespace leantime\domain\controllers {
 									if ($userRepo->usernameExist($values['user']) === false) {
 										$userId = $userRepo->addUser($values);
 
-//                                        echo json_encode(['id'=>$userId]);exit();
 										//Update Project Relationships
 										if (isset($_POST['projects'])) {
 											if ($_POST['projects'][0] !== '0') {
