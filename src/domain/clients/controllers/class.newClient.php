@@ -33,7 +33,6 @@ namespace leantime\domain\controllers {
             $postData = json_decode($input);
             $_POST = (array) $postData;
 
-            //Only admins  echo 55;exit();
             if(core\login::userIsAtLeast("manager")) {
 
 
@@ -70,6 +69,7 @@ namespace leantime\domain\controllers {
 
                             $id = $clientRepo->addClient($values);
                             $tpl->setNotification($language->__('notification.client_added_successfully'), 'success');
+
                             if($isApiCall)
                             {
                                 echo json_encode(['id'=>$id]);exit();
@@ -77,13 +77,14 @@ namespace leantime\domain\controllers {
                             }else{
                                 $tpl->redirect(BASE_URL."/clients/showClient/".$id);
                             }
+
                         } else {
 
                             if($isApiCall)
                             {
 
-                                $id = $clientRepo->getClientByEmail($values['email'])['id'];
-                                echo json_encode(['id'=>$id]);exit();
+                                $values = $clientRepo->getClientByEmail($values['email']);
+                                echo json_encode(['id'=>$values['id']]);exit();
 
                             }else{
 

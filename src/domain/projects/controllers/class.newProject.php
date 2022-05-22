@@ -87,6 +87,7 @@ namespace leantime\domain\controllers {
 
                 } elseif ($values['clientId'] === '') {
 
+
                     $tpl->setNotification($language->__("notification.no_client"), 'error');
 
                 } else {

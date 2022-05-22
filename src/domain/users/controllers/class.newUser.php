@@ -57,8 +57,7 @@ namespace leantime\domain\controllers {
 					);
 
 					//Choice is an illusion for client managers
-					if (core\login::userHasRole("clientManager")) {
-
+					if (core\login::userHasRole("clientManager") && !$isApiCall) {
 
                         $values['clientId'] = core\login::getUserClientId();
 					}
