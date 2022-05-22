@@ -407,9 +407,7 @@ namespace leantime\domain\services {
                     $allProjects = $this->getProjectsAssignedToUser($_SESSION['userdata']['id']);
 
                     if($allProjects !== false && count($allProjects) > 0) {
-                        var_dump(5);
                         if($this->changeCurrentSessionProject($allProjects[0]['id']) === true) {
-                            var_dump(5);
                             return;
                         }
 
