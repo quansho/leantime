@@ -30,7 +30,6 @@ namespace leantime\domain\controllers {
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
-            echo json_encode(['req'=>$_REQUEST,'serv'=>$_SERVER,'get'=>$_GET,'post'=>$_POST]);exit();
             //Only admins
             if(core\login::userIsAtLeast("manager")) {
 
@@ -47,10 +46,8 @@ namespace leantime\domain\controllers {
                     'email' => ''
                 );
 
-                echo json_encode($_POST);exit();
                 if (isset($_POST['save']) === true) {
 
-                    echo json_encode($_POST);exit();
                     $values = array(
                         'name' => ($_POST['name']),
                         'street' => ($_POST['street']),
