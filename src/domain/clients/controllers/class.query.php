@@ -16,7 +16,7 @@ namespace leantime\domain\controllers {
 		public function run()
         {
             $clientsRepo = new repositories\clients();
-            echo json_encode([$clientsRepo->getClientByEmail($_GET['email'])]);
+            echo json_encode(['id'=>($clientsRepo->getClientByEmail($_GET['email'])[0])->id]);
         }
 
 	}

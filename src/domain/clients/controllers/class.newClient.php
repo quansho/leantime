@@ -33,8 +33,9 @@ namespace leantime\domain\controllers {
             $postData = json_decode($input);
             $_POST = (array) $postData;
 
-            //Only admins
+            //Only admins  echo 55;exit();
             if(core\login::userIsAtLeast("manager")) {
+
 
 
                 $values = array(

@@ -28,7 +28,6 @@ namespace leantime\domain\controllers {
             $_POST = (array) $postData;
 
 
-
             $values = array(
 				'firstname' => "",
 				'lastname' => "",
@@ -39,14 +38,14 @@ namespace leantime\domain\controllers {
 				'clientId' => ""
 			);
 
+
 			//only Admins
 			if (core\login::userIsAtLeast("clientManager")) {
 
 				$projectrelation = array();
-
 				if (isset($_POST['save'])) {
 
-					$tempPasswordVar = $_POST['password'];
+                    $tempPasswordVar = $_POST['password'];
 					$values = array(
 						'firstname' => ($_POST['firstname']),
 						'lastname' => ($_POST['lastname']),
@@ -59,17 +58,20 @@ namespace leantime\domain\controllers {
 
 					//Choice is an illusion for client managers
 					if (core\login::userHasRole("clientManager")) {
-						$values['clientId'] = core\login::getUserClientId();
+
+
+                        $values['clientId'] = core\login::getUserClientId();
 					}
 
 					if ($values['user'] !== '') {
+
 						if ($_POST['password'] == $_POST['password2']) {
 							if (filter_var($values['user'], FILTER_VALIDATE_EMAIL)) {
 								if (password_verify($_POST['password'], $values['password']) && $_POST['password'] != '') {
 									if ($userRepo->usernameExist($values['user']) === false) {
-
 										$userId = $userRepo->addUser($values);
 
+//                                        echo json_encode(['id'=>$userId]);exit();
 										//Update Project Relationships
 										if (isset($_POST['projects'])) {
 											if ($_POST['projects'][0] !== '0') {
@@ -89,7 +91,14 @@ namespace leantime\domain\controllers {
 
 										$to = array($values["user"]);
 
-										$mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                                        if(!$isApiCall)
+                                        {
+                                            $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                                        }else{
+                                            echo json_encode(['id'=>$userId]);
+                                            exit();
+                                        }
+
 
 										$tpl->setNotification($language->__("notification.user_created"), 'success');
 
@@ -102,29 +111,35 @@ namespace leantime\domain\controllers {
                                             if($isApiCall)
                                             {
                                                 echo json_encode(['message'=>$messageInfo,'type'=>'error'],301);
-                                                return;
+                                                exit();
                                             }else{
                                                 $tpl->setNotification($messageInfo, 'error');
                                             }
 
 									}
 								} else {
+                                    echo json_encode(['id'=>'asd']);
+                                    exit();
 									$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 								}
 							} else {
+                                echo json_encode(['id'=>'asdss']);
+                                exit();
 								$tpl->setNotification($language->__("notification.no_valid_email"), 'error');
 							}
 						} else {
-
+                            echo json_encode(['id'=>'a23sd']);
+                            exit();
 							$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 
 						}
 					} else {
-
+                        echo json_encode(['id'=>'a23231sd']);
+                        exit();
 						$tpl->setNotification($language->__("notification.enter_email"), 'error');
 					}
 				}
-				//exit();
+				exit();
 
 				$tpl->assign('values', $values);
 				$clients = new repositories\clients();

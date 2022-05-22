@@ -111,19 +111,33 @@ namespace leantime\domain\controllers {
                         }
                     }
 
-                    $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                    if(!$isApiCall)
+                    {
+                        $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                    }
+
 
                     //Take the old value to avoid nl character
                     $values['details'] = $_POST['details'];
 
                     $tpl->setNotification(sprintf($language->__('notifications.project_created_successfully'), BASE_URL.'/leancanvas/simpleCanvas/'), 'success');
 
-                    $tpl->redirect(BASE_URL."/projects/showProject/". $id);
+                    if($isApiCall)
+                    {
+                        echo json_encode(['id'=>$id]);exit();
+                    }else{
+                        $tpl->redirect(BASE_URL."/projects/showProject/". $id);
+                    }
 
                 }
 
 
-                $tpl->assign('values', $values);
+                if($isApiCall)
+                {
+                    echo json_encode($values);exit();
+                }else{
+                    $tpl->assign('values', $values);
+                }
 
             }
 
