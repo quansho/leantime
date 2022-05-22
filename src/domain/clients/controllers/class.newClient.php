@@ -30,6 +30,7 @@ namespace leantime\domain\controllers {
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
 
+            echo json_decode($_POST);exit();
             //Only admins
             if(core\login::userIsAtLeast("manager")) {
 
@@ -120,7 +121,7 @@ namespace leantime\domain\controllers {
                 {
                     $tpl->display('general.error');
                 }else{
-                    echo json_encode(['message'=>__('error')]);exit();
+                    echo json_encode(['message'=>$language->__('error')]);exit();
                 }
 
 
