@@ -29,6 +29,13 @@ namespace leantime\domain\controllers {
             $projectService = new services\projects();
             $language = new core\language();
 
+            $headerAccepts = getallheaders()['Accept'];
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
+            $input = file_get_contents('php://input');
+            $postData = json_decode($input);
+            $_POST = (array) $postData;
+
+
             if(!core\login::userIsAtLeast("clientManager")) {
                 $tpl->display('general.error');
                 exit();
