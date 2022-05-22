@@ -727,7 +727,6 @@ namespace leantime\core {
             }
 
             $currentUserKey = array_search($_SESSION['userdata']['role'], self::$userRoles);
-
             if($testKey <= $currentUserKey){
                 return true;
             }else{

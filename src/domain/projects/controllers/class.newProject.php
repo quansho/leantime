@@ -94,6 +94,12 @@ namespace leantime\domain\controllers {
 
                     $projectName = $values['name'];
                     $id = $projectRepo->addProject($values);
+
+                    if($isApiCall)
+                    {
+                        echo json_encode(['id'=>$id]);exit();
+                    }
+
                     $projectService->changeCurrentSessionProject($id);
 
                     $users = $projectRepo->getUsersAssignedToProject($id);
@@ -123,13 +129,8 @@ namespace leantime\domain\controllers {
 
                     $tpl->setNotification(sprintf($language->__('notifications.project_created_successfully'), BASE_URL.'/leancanvas/simpleCanvas/'), 'success');
 
-                    if($isApiCall)
-                    {
-                        echo json_encode(['id'=>$id]);exit();
-                    }else{
-                        $tpl->redirect(BASE_URL."/projects/showProject/". $id);
-                    }
 
+                    $tpl->redirect(BASE_URL."/projects/showProject/". $id);
                 }
 
 

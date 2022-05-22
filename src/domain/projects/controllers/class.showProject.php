@@ -39,6 +39,16 @@ namespace leantime\domain\controllers {
             $projectRepo = new repositories\projects();
             $config = new core\config();
 
+            $headerAccepts = getallheaders()['Accept'];
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
+            if($isApiCall)
+            {
+                $input = file_get_contents('php://input');
+                $postData = json_decode($input);
+                $_POST = (array) $postData;
+            }
+
+
             if(!core\login::userIsAtLeast("clientManager")) {
                 $tpl->display('general.error');
                 exit();
@@ -168,6 +178,14 @@ namespace leantime\domain\controllers {
 
                 if ($project['numberOfTickets'] == null) {
                     $project['numberOfTickets'] = 1;
+                }
+
+
+                if (isset($_POST['saveAssignMember']) === true) {
+                    $values = array(
+                        'assignedUsers' => $_POST['assignedUsers'],
+                    );
+                    $projectRepo->editProject($values, $id);exit();
                 }
 
                 //save changed project data
