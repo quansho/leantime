@@ -185,7 +185,8 @@ namespace leantime\domain\controllers {
                     $values = array(
                         'assignedUsers' => $_POST['assignedUsers'],
                     );
-                    $projectRepo->editProject($values, $id);exit();
+                    $projectRepo->createTeamMember($values, $id);
+                    exit();
                 }
 
                 //save changed project data
