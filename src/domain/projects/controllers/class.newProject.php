@@ -31,10 +31,6 @@ namespace leantime\domain\controllers {
 
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
-            $input = file_get_contents('php://input');
-            $postData = json_decode($input);
-            $_POST = (array) $postData;
-
 
             if(!core\login::userIsAtLeast("clientManager")) {
                 $tpl->display('general.error');
