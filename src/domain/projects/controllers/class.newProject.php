@@ -29,6 +29,13 @@ namespace leantime\domain\controllers {
             $projectService = new services\projects();
             $language = new core\language();
 
+            $headerAccepts = getallheaders()['Accept'];
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
+            $input = file_get_contents('php://input');
+            $postData = json_decode($input);
+            $_POST = (array) $postData;
+
+
             if(!core\login::userIsAtLeast("clientManager")) {
                 $tpl->display('general.error');
                 exit();
@@ -80,12 +87,19 @@ namespace leantime\domain\controllers {
 
                 } elseif ($values['clientId'] === '') {
 
+
                     $tpl->setNotification($language->__("notification.no_client"), 'error');
 
                 } else {
 
                     $projectName = $values['name'];
                     $id = $projectRepo->addProject($values);
+
+                    if($isApiCall)
+                    {
+                        echo json_encode(['id'=>$id]);exit();
+                    }
+
                     $projectService->changeCurrentSessionProject($id);
 
                     $users = $projectRepo->getUsersAssignedToProject($id);
@@ -104,19 +118,28 @@ namespace leantime\domain\controllers {
                         }
                     }
 
-                    $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                    if(!$isApiCall)
+                    {
+                        $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                    }
+
 
                     //Take the old value to avoid nl character
                     $values['details'] = $_POST['details'];
 
                     $tpl->setNotification(sprintf($language->__('notifications.project_created_successfully'), BASE_URL.'/leancanvas/simpleCanvas/'), 'success');
 
-                    $tpl->redirect(BASE_URL."/projects/showProject/". $id);
 
+                    $tpl->redirect(BASE_URL."/projects/showProject/". $id);
                 }
 
 
-                $tpl->assign('values', $values);
+                if($isApiCall)
+                {
+                    echo json_encode($values);exit();
+                }else{
+                    $tpl->assign('values', $values);
+                }
 
             }
 

@@ -514,6 +514,18 @@ namespace leantime\domain\repositories {
 
         }
 
+        public function createTeamMember(array $values, $id)
+        {
+            //Add users to relation
+            if(is_array($values['assignedUsers']) === true && count($values['assignedUsers']) > 0) {
+
+                foreach($values['assignedUsers'] as $userId){
+                    $this->addProjectRelation($userId, $id);
+                }
+
+            }
+        }
+
         /**
          * deleteProject - delete a project
          *

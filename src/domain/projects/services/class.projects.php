@@ -384,6 +384,7 @@ namespace leantime\domain\services {
 
             }
 
+
             //Find project if nothing is set
             //Login experience. If nothing is set look for the last set project
             //If there is none (new feature, new user) use the first project in the list.
@@ -406,7 +407,6 @@ namespace leantime\domain\services {
                     $allProjects = $this->getProjectsAssignedToUser($_SESSION['userdata']['id']);
 
                     if($allProjects !== false && count($allProjects) > 0) {
-
                         if($this->changeCurrentSessionProject($allProjects[0]['id']) === true) {
                             return;
                         }

@@ -131,12 +131,12 @@ namespace leantime\domain\repositories {
         public function isClient($values)
         {
 
-            $sql = "SELECT name, street FROM zp_clients WHERE
-			name = :name AND street = :street LIMIT 1";
+            $sql = "SELECT name, email FROM zp_clients WHERE
+			name = :name AND email = :email LIMIT 1";
 
             $stmn = $this->db->database->prepare($sql);
             $stmn->bindValue(':name', $values['name'], PDO::PARAM_STR);
-            $stmn->bindValue(':street', $values['street'], PDO::PARAM_STR);
+            $stmn->bindValue(':email', $values['email'], PDO::PARAM_STR);
 
             $stmn->execute();
             $values = $stmn->fetchAll();
@@ -148,6 +148,28 @@ namespace leantime\domain\repositories {
             }
 
             return $flag;
+        }
+
+        public function getClientByEmail($email)
+        {
+
+            $sql = "SELECT id, name, email FROM zp_clients WHERE
+			email = :email LIMIT 1";
+
+
+
+            $stmn = $this->db->database->prepare($sql);
+            $stmn->bindValue(':email', $email, PDO::PARAM_STR);
+
+
+            $stmn->execute();
+
+            $values = $stmn->fetch();
+
+            $stmn->closeCursor();
+
+
+            return $values;
         }
 
         public function getClientsUsers($clientId)

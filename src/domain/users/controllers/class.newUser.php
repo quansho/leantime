@@ -2,9 +2,8 @@
 
 namespace leantime\domain\controllers {
 
-	use leantime\core;
+    use leantime\core;
 	use leantime\domain\repositories;
-	use leantime\domain\services;
 
 	class newUser
 	{
@@ -22,7 +21,14 @@ namespace leantime\domain\controllers {
 			$project = new repositories\projects();
 			$language = new core\language();
 
-			$values = array(
+            $headerAccepts = getallheaders()['Accept'];
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
+            $input = file_get_contents('php://input');
+            $postData = json_decode($input);
+            $_POST = (array) $postData;
+
+
+            $values = array(
 				'firstname' => "",
 				'lastname' => "",
 				'user' => "",
@@ -32,14 +38,14 @@ namespace leantime\domain\controllers {
 				'clientId' => ""
 			);
 
+
 			//only Admins
 			if (core\login::userIsAtLeast("clientManager")) {
 
 				$projectrelation = array();
-
 				if (isset($_POST['save'])) {
 
-					$tempPasswordVar = $_POST['password'];
+                    $tempPasswordVar = $_POST['password'];
 					$values = array(
 						'firstname' => ($_POST['firstname']),
 						'lastname' => ($_POST['lastname']),
@@ -52,15 +58,16 @@ namespace leantime\domain\controllers {
 
 					//Choice is an illusion for client managers
 					if (core\login::userHasRole("clientManager")) {
-						$values['clientId'] = core\login::getUserClientId();
+
+                        $values['clientId'] = core\login::getUserClientId();
 					}
 
 					if ($values['user'] !== '') {
+
 						if ($_POST['password'] == $_POST['password2']) {
 							if (filter_var($values['user'], FILTER_VALIDATE_EMAIL)) {
 								if (password_verify($_POST['password'], $values['password']) && $_POST['password'] != '') {
 									if ($userRepo->usernameExist($values['user']) === false) {
-
 										$userId = $userRepo->addUser($values);
 
 										//Update Project Relationships
@@ -82,7 +89,14 @@ namespace leantime\domain\controllers {
 
 										$to = array($values["user"]);
 
-										$mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                                        if(!$isApiCall)
+                                        {
+                                            $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
+                                        }else{
+                                            echo json_encode(['id'=>$userId]);
+                                            exit();
+                                        }
+
 
 										$tpl->setNotification($language->__("notification.user_created"), 'success');
 
@@ -90,29 +104,40 @@ namespace leantime\domain\controllers {
 
 									} else {
 
-										$tpl->setNotification($language->__("notification.user_exists"), 'error');
+                                        $messageInfo = $language->__("notification.user_exists");
+
+                                            if($isApiCall)
+                                            {
+                                                echo json_encode(['message'=>$messageInfo,'type'=>'error'],301);
+                                                exit();
+                                            }else{
+                                                $tpl->setNotification($messageInfo, 'error');
+                                            }
 
 									}
 								} else {
-
+                                    echo json_encode(['id'=>'asd']);
+                                    exit();
 									$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 								}
 							} else {
-
+                                echo json_encode(['id'=>'asdss']);
+                                exit();
 								$tpl->setNotification($language->__("notification.no_valid_email"), 'error');
 							}
 						} else {
-
-
+                            echo json_encode(['id'=>'a23sd']);
+                            exit();
 							$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 
 						}
 					} else {
-
+                        echo json_encode(['id'=>'a23231sd']);
+                        exit();
 						$tpl->setNotification($language->__("notification.enter_email"), 'error');
 					}
 				}
-				//exit();
+				exit();
 
 				$tpl->assign('values', $values);
 				$clients = new repositories\clients();

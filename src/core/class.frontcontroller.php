@@ -93,7 +93,6 @@ namespace leantime\core {
                     $completeName = $this->firstAction;
 
                 }else{
-
                     $completeName = $differentFirstAction;
 
                 }
