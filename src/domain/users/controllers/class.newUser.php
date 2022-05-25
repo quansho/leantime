@@ -133,7 +133,6 @@ namespace leantime\domain\controllers {
 						$tpl->setNotification($language->__("notification.enter_email"), 'error');
 					}
 				}
-				exit();
 
 				$tpl->assign('values', $values);
 				$clients = new repositories\clients();
