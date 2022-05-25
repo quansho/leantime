@@ -85,14 +85,13 @@ namespace leantime\domain\controllers {
 
 										$to = array($values["user"]);
 
-                                        if(!$isApiCall)
+                                        if($isApiCall)
                                         {
-                                            $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
-                                        }else{
                                             echo json_encode(['id'=>$userId]);
                                             exit();
                                         }
 
+                                        $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
 
 										$tpl->setNotification($language->__("notification.user_created"), 'success');
 
@@ -104,7 +103,7 @@ namespace leantime\domain\controllers {
 
                                             if($isApiCall)
                                             {
-                                                echo json_encode(['message'=>$messageInfo,'type'=>'error'],301);
+                                                echo json_encode(['message'=>$messageInfo,'type'=>'error','status'=>300]);
                                                 exit();
                                             }else{
                                                 $tpl->setNotification($messageInfo, 'error');
@@ -112,25 +111,50 @@ namespace leantime\domain\controllers {
 
 									}
 								} else {
-                                    echo json_encode(['id'=>'asd']);
-                                    exit();
-									$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
+                                    $message = $language->__("notification.passwords_dont_match");
+
+                                    if($isApiCall)
+                                    {
+                                        echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                                        exit();
+                                    }
+
+                                    $tpl->setNotification($message, 'error');
 								}
 							} else {
-                                echo json_encode(['id'=>'asdss']);
-                                exit();
-								$tpl->setNotification($language->__("notification.no_valid_email"), 'error');
+                                $message = $language->__("notification.no_valid_email");
+
+                                if($isApiCall)
+                                {
+                                    echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                                    exit();
+                                }
+
+                                $tpl->setNotification($message, 'error');
+
 							}
 						} else {
-                            echo json_encode(['id'=>'a23sd']);
-                            exit();
-							$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 
+                            $message = $language->__("notification.passwords_dont_match");
+
+                            if($isApiCall)
+                            {
+                                echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                                exit();
+                            }
+
+                            $tpl->setNotification($message, 'error');
 						}
 					} else {
-                        echo json_encode(['id'=>'a23231sd']);
-                        exit();
-						$tpl->setNotification($language->__("notification.enter_email"), 'error');
+                        $message = $language->__("notification.enter_email");
+
+                        if($isApiCall)
+                        {
+                            echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                            exit();
+                        }
+
+                        $tpl->setNotification($message, 'error');
 					}
 				}
 
