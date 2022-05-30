@@ -199,13 +199,6 @@ namespace leantime\core {
                 return $patch_vars;
                     break;
             case 'post':
-                $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
-                if($isApiCall)
-                {
-                    $input = file_get_contents('php://input');
-                    $postData = json_decode($input);
-                    $_POST = (array) $postData;
-                }
                 return $_POST;
                     break;
             case 'get':
