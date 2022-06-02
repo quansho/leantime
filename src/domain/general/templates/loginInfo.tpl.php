@@ -43,5 +43,10 @@
             <?php } ?>
 
         <?php } ?>
+        <li class="border">
+            <a href='<?=BASE_URL ?>/index.php?logout=1'>
+                <?=$this->__("menu.sign_out")?>
+            </a>
+        </li>
     </ul>
 </div>
