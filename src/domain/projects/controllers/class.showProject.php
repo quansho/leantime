@@ -155,6 +155,7 @@ namespace leantime\domain\controllers {
 
 
 
+
                 $helper = new core\helper();
 
                 if(core\login::userHasRole("clientManager") && $project['clientId'] != core\login::getUserClientId()) {
@@ -422,6 +423,8 @@ namespace leantime\domain\controllers {
                 if(core\login::userIsAtLeast("manager")) {
                     $tpl->assign('availableUsers', $user->getAll());
                     $tpl->assign('clients', $clients->getAll());
+                }elseif (core\login::userIsAtLeast("clientManager")){
+                    $tpl->assign('availableUsers', $user->getAll());
                 }else{
                     $tpl->assign('availableUsers', $user->getAllClientUsers(core\login::getUserClientId()));
                     $tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
