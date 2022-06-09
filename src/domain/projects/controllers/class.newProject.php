@@ -99,7 +99,8 @@ namespace leantime\domain\controllers {
 
                     if($isApiCall)
                     {
-                        echo json_encode(['id'=>$id]);exit();
+                        echo json_encode(['id'=>$id]);
+                        exit();
                     }
 
                     $projectService->changeCurrentSessionProject($id);

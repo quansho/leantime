@@ -420,12 +420,12 @@ namespace leantime\domain\controllers {
 
                 $user = new repositories\users();
 
-                if(core\login::userIsAtLeast("manager")) {
+                if(core\login::userIsAtLeast("manager") || core\login::userIsAtLeast("clientManager")) {
                     $tpl->assign('availableUsers', $user->getAll());
                     $tpl->assign('clients', $clients->getAll());
-                }elseif (core\login::userIsAtLeast("clientManager")){
-                    $tpl->assign('availableUsers', $user->getAll());
+
                 }else{
+
                     $tpl->assign('availableUsers', $user->getAllClientUsers(core\login::getUserClientId()));
                     $tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
                 }
