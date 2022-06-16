@@ -31,32 +31,27 @@ $roles = $this->get('roles');
             <colgroup>
                 <col class="con1">
                 <col class="con0">
-                <col class="con1">
-                <col class="con0">
-                <col class="con1">
-                <col class="con0">
             </colgroup>
             <thead>
                 <tr>
                     <th class='head1'><?php echo $this->__('label.name'); ?></th>
                     <th class='head0'><?php echo $this->__('label.email'); ?></th>
-                    <th class='head1'><?php echo $this->__('label.client'); ?></th>
-                    <th class='head1'><?php echo $this->__('label.role'); ?></th>
-                    <th class='head1'><?php echo $this->__('headlines.twoFA'); ?></th>
-                    <th class='head0 no-sort'></th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach($this->get('allUsers') as $row): ?>
                     <tr>
                         <td style="padding:6px 10px;">
-                        <?php echo $this->displayLink('users.editUser', sprintf( $this->__("text.full_name"), $this->escape($row["firstname"]), $this->escape($row["lastname"])), array('id' => $row['id'])); ?>
+                        <?php if($login::userIsAtLeast("admin")) : ?>
+                                <?php echo $this->displayLink('users.editUser', sprintf( $this->__("text.full_name"), $this->escape($row["firstname"]), $this->escape($row["lastname"])), array('id' => $row['id'])); ?>
+                            <?php else: ?>
+                            <?php echo sprintf( $this->__("text.full_name"), $this->escape($row["firstname"]), $this->escape($row["lastname"])); ?>
+                        <?php endif; ?>
                         </td>
                         <td><?php echo $row['username']; ?></td>
-                        <td><?=$row['clientName']; ?></td>
-                        <td><?=$this->__("label.roles.".$roles[$row['role']]); ?></td>
-                        <td><?php if($row['twoFAEnabled']){ echo $this->__('label.yes'); }else{ echo $this->__('label.no'); } ?></td>
+                        <?php if($login::userIsAtLeast("admin")) : ?>
                         <td><a href="<?=BASE_URL ?>/users/delUser/<?php echo $row['id']?>" class="delete"><i class="fa fa-trash"></i> <?=$this->__('links.delete');?></a></td>
+                        <?php endif; ?>
                     </tr>
             <?php endforeach; ?>
             </tbody>
