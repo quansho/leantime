@@ -13,7 +13,7 @@
                 <?=$this->__("menu.my_profile")?>
             </a>
         </li>
-        <?php if ($login::userIsAtLeast("clientManager")) { ?>
+        <?php if ($login::userIsAtLeast("user")) { ?>
 
         <li class="nav-header border"><?=$this->__("label.administration")?></li>
 
@@ -23,11 +23,11 @@
                 </a>
             </li>
 
-            <li <?php if($module == 'clients') echo" class='active' "; ?>>
-                <a href='<?=BASE_URL ?>/clients/showAll/'>
-                    <?=$this->__("menu.all_clients")?>
-                </a>
-            </li>
+<!--            <li --><?php //if($module == 'clients') echo" class='active' "; ?><!---->
+<!--                <a href='--><?//=BASE_URL ?><!--/clients/showAll/'>-->
+<!--                    --><?//=$this->__("menu.all_clients")?>
+<!--                </a>-->
+<!--            </li>-->
             <li <?php if($module == 'users') echo" class='active' "; ?>>
                 <a href='<?=BASE_URL ?>/users/showAll/'>
                     <?=$this->__("menu.all_users")?>

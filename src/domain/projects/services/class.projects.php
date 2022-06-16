@@ -454,6 +454,7 @@ namespace leantime\domain\services {
                 if ($project) {
 
                     $_SESSION["currentProject"] = $projectId;
+                    $_SESSION["currentProjectOwner"] = $project['ownerId'];
 
                     if (mb_strlen($project['name']) > 25) {
                         $_SESSION["currentProjectName"] = mb_substr($project['name'], 0, 25) . " (...)";
@@ -543,7 +544,7 @@ namespace leantime\domain\services {
 
         }
 
-        public function duplicateProject(int $projectId, int $clientId, string $projectName, string $startDate, bool $assignSameUsers) {
+        public function duplicateProject(int $projectId, int $ownerId, string $projectName, string $startDate, bool $assignSameUsers) {
 
             //Ignoring
             //Comments, files, timesheets, personalCalendar Events
@@ -554,7 +555,7 @@ namespace leantime\domain\services {
 
             $copyProject = array(
                 "name" => $projectName,
-                "clientId" => $clientId,
+                "ownerId" => $ownerId,
                 "details" => $projectValues['details'],
                 "state" => $projectValues['state'],
                 "hourBudget" => $projectValues['hourBudget'],

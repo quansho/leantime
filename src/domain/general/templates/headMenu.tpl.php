@@ -7,7 +7,7 @@
             <?=$this->__("menu.my_portfolio")?>
         </a>
     </li>
-    <?php if ($login::userIsAtLeast("developer")) {
+    <?php if ($login::userIsAtLeast("user")) {
 
         if($this->get('onTheClock') !== false){
         echo "<li class='timerHeadMenu' id='timerHeadMenu'>";

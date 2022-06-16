@@ -15,14 +15,6 @@ $project = $this->get('project');
     <label><?=$this->__('label.planned_start_date') ?></label>
     <input type="text" name="startDate" class="projectDateFrom" value="<?php echo $this->getFormattedDateString( date("Y-m-d") ) ?>" placeholder="<?=$this->__('language.jsdateformat') ?>" id="sprintStart" /><br />
 
-    <label><?=$this->__('label.client_product') ?></label>
-    <select name="clientId" id="clientId">
-        <?php foreach($this->get('allClients') as $row){ ?>
-            <option value="<?php echo $row['id']; ?>"
-                <?php if($project['clientId'] == $row['id']) { ?> selected=selected
-                <?php } ?>><?php $this->e($row['name']); ?></option>
-        <?php } ?>
-    </select>
     <br />
     <input style="float:left; margin-right:5px;"
            type="checkbox" name="assignSameUsers" id="assignSameUsers"/>

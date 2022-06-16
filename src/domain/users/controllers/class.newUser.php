@@ -43,7 +43,7 @@ namespace leantime\domain\controllers {
 
 
 			//only Admins
-			if (core\login::userIsAtLeast("clientManager")) {
+//			if (core\login::userIsAtLeast("clientManager")) {
 
 				$projectrelation = array();
 				if (isset($_POST['save'])) {
@@ -54,16 +54,17 @@ namespace leantime\domain\controllers {
 						'lastname' => ($_POST['lastname']),
 						'user' => ($_POST['user']),
 						'phone' => ($_POST['phone']),
-						'role' => ($_POST['role']),
+						'role' => (core\login::userIsAtLeast("admin")) ? ($_POST['role']) : 15,//TODO MAGIC 15
 						'password' => (password_hash($_POST['password'], PASSWORD_DEFAULT)),
-						'clientId' => ($_POST['client'])
+						'creatorId' => core\login::getUserId(),
+//						'clientId' => ($_POST['client'])
 					);
 
 					//Choice is an illusion for client managers
-                if (core\login::userHasRole("clientManager") && !$isApiCall) {
-
-                        $values['clientId'] = core\login::getUserClientId();
-					}
+//                if (core\login::userHasRole("clientManager") && !$isApiCall) {
+//
+//                        $values['clientId'] = core\login::getUserClientId();
+//				}
 
 					if ($values['user'] !== '') {
 
@@ -169,13 +170,13 @@ namespace leantime\domain\controllers {
 				$clients = new repositories\clients();
 
 				if (core\login::userIsAtLeast("manager")) {
-					$tpl->assign('clients', $clients->getAll());
+//					$tpl->assign('clients', $clients->getAll());
 					$tpl->assign('allProjects', $project->getAll());
 					$tpl->assign('roles', core\login::$userRoles);
 				} else {
 
-					$tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
-					$tpl->assign('allProjects', $project->getClientProjects(core\login::getUserClientId()));
+//					$tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
+					$tpl->assign('allProjects', $project->getClientProjects(core\login::getUserId()));
 					$tpl->assign('roles', core\login::$clientManagerRoles);
 				}
 				$tpl->assign('relations', $projectrelation);
@@ -183,11 +184,12 @@ namespace leantime\domain\controllers {
 
 				$tpl->display('users.newUser');
 
-			} else {
-
-				$tpl->display('general.error');
-
-			}
+//			}
+//            else {
+//
+//				$tpl->display('general.error');
+//
+//			}
 
 		}
 

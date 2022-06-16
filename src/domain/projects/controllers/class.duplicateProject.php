@@ -25,18 +25,12 @@ namespace leantime\domain\controllers {
         {
 
             //Only admins
-            if(core\login::userIsAtLeast("clientManager")) {
+            if(core\login::userIsAtLeast("user")) {
 
                 if (isset($_GET['id']) === true) {
 
                     $id = (int)($_GET['id']);
                     $project = $this->projectService->getProject($id);
-
-                    if(core\login::userIsAtLeast("manager")) {
-                        $this->tpl->assign('allClients', $this->clientRepo->getAll());
-                    }else{
-                        $this->tpl->assign('allClients', array($this->clientRepo->getClient(core\login::getUserClientId())));
-                    }
 
                     $this->tpl->assign("project", $project);
                     $this->tpl->displayPartial('projects.duplicateProject');
@@ -58,19 +52,19 @@ namespace leantime\domain\controllers {
         public function post($params) {
 
             //Only admins
-            if(core\login::userIsAtLeast("clientManager")) {
+            if(core\login::userIsAtLeast("user")) {
 
                 $id = (int)($_GET['id']);
                 $projectName = $params['projectName'];
                 $startDate = $this->language->getISODateString($params['startDate']);
-                $clientId = (int) $params['clientId'];
+                $ownerId = (int) core\login::getUserId();
                 $assignSameUsers = false;
 
                 if(isset($params['assignSameUsers'])) {
                     $assignSameUsers = true;
                 }
 
-                $result = $this->projectService->duplicateProject($id, $clientId, $projectName, $startDate, $assignSameUsers );
+                $result = $this->projectService->duplicateProject($id, $ownerId, $projectName, $startDate, $assignSameUsers );
 
                 $this->tpl->setNotification(sprintf($this->language->__("notifications.project_copied_successfully"), BASE_URL."/projects/changeCurrentProject/".$result), 'success');
 

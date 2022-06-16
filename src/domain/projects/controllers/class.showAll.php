@@ -19,7 +19,7 @@ namespace leantime\domain\controllers {
 
             $tpl = new core\template();
 
-            if(core\login::userIsAtLeast("clientManager")) {
+            if(core\login::userIsAtLeast("user")) {
 
                 $projectRepo = new repositories\projects();
 
@@ -28,7 +28,7 @@ namespace leantime\domain\controllers {
                 if(core\login::userIsAtLeast("manager")) {
                     $tpl->assign('allProjects', $projectRepo->getAll());
                 }else{
-                    $tpl->assign('allProjects', $projectRepo->getClientProjects(core\login::getUserClientId()));
+                    $tpl->assign('allProjects', $projectRepo->getClientProjects(core\login::getUserId()));
                 }
 
                 $tpl->display('projects.showAll');

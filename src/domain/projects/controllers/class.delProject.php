@@ -23,7 +23,9 @@ namespace leantime\domain\controllers {
             $language = new core\language();
 
             //Only admins
-            if(core\login::userIsAtLeast("clientManager")) {
+            if(
+                (core\login::userIsAtLeast("user") &&
+                $projectRepo->getProject($_GET['id'])['ownerId'] == core\login::getUserId() ) || core\login::userIsAtLeast("admin")) {
 
                 if (isset($_GET['id']) === true) {
 

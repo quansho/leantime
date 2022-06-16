@@ -24,24 +24,7 @@ $helper = $this->get('helper');
                         </div>
                     </div>
 
-                    <div class="form-group">
 
-                        <label  class="span4 control-label" for="clientId"><?=$this->__('label.client_product'); ?></label>
-                        <div class="span6">
-                            <select name="clientId" id="clientId">
-
-                            <?php foreach($this->get('clients') as $row){ ?>
-                                <option value="<?php echo $row['id']; ?>"
-                                    <?php if($project['clientId'] == $row['id']) { ?> selected=selected
-                                    <?php } ?>><?php $this->e($row['name']); ?></option>
-                            <?php } ?>
-
-                            </select>
-                            <?php if($login::userIsAtLeast("manager")) { ?>
-                            <a href="<?=BASE_URL?>/clients/newClient" target="_blank"><?=$this->__('label.client_not_listed'); ?></a>
-                            <?php } ?>
-                        </div>
-                    </div>
 
                     <div class="form-group">
 

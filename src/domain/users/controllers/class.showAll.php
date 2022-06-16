@@ -18,16 +18,22 @@ namespace leantime\domain\controllers {
             $ldapService = new services\ldap();
 
             //Only Admins
-            if(core\login::userIsAtLeast("clientManager")) {
 
-                if(core\login::userIsAtLeast("manager")) {
+            $tpl->assign('allUsers', $userRepo->getAll());
+
+
+
+            if(core\login::userIsAtLeast("user")) {
+
+                if(core\login::userIsAtLeast("admin")) {
+                    $tpl->assign('admin', true);
+
                     $tpl->assign('allUsers', $userRepo->getAll());
 
                 }else{
-                    $tpl->assign('allUsers', $userRepo->getAllClientUsers(core\login::getUserClientId()));
+                    $tpl->assign('allUsers', $userRepo->getAllClientUsers(core\login::getUserId()));
                 }
 
-                $tpl->assign('admin', true);
                 $tpl->assign('roles', core\login::$userRoles);
 
                 $tpl->display('users.showAll');

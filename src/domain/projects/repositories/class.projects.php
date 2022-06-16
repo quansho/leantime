@@ -109,14 +109,17 @@ namespace leantime\domain\repositories {
 					project.id,
 					project.name,
 					project.clientId,
+					project.ownerId,
 					project.state,
 					project.hourBudget,
 					project.dollarBudget,
+					CONCAT(user.firstname,' ', user.lastname) as ownerName,
 					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets,
 					client.name AS clientName,
 					client.id AS clientId 
 				FROM zp_relationuserproject AS relation
 				LEFT JOIN zp_projects as project ON project.id = relation.projectId
+				LEFT JOIN zp_user as user ON project.ownerId = user.id
 				LEFT JOIN zp_clients as client ON project.clientId = client.id
 				LEFT JOIN zp_tickets as ticket ON project.id = ticket.projectId  
 				WHERE relation.userId = :id AND (project.active > '-1' OR project.active IS NULL)";
@@ -133,7 +136,7 @@ namespace leantime\domain\repositories {
 
             $query .= " GROUP BY 
 					project.id
-				ORDER BY clientName, project.name";
+				ORDER BY ownerName, project.name";
 
 
             $stmn = $this->db->database->prepare($query);
@@ -150,37 +153,33 @@ namespace leantime\domain\repositories {
             return $values;
         }
 
-        public function getClientProjects($clientId)
+        public function getClientProjects($userId)
         {
 
-            $sql = "SELECT
+            $sql = "SELECT 
 					project.id,
 					project.name,
-					project.clientId,
 					project.hourBudget,
 					project.dollarBudget,
 					project.state,
-					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets,
-					client.name AS clientName,
-					client.id AS clientId 
-				FROM zp_projects as project
-				LEFT JOIN zp_clients as client ON project.clientId = client.id
-				LEFT JOIN zp_tickets as ticket ON project.id = ticket.projectId  
-				WHERE 
-				  (project.active > '-1' OR project.active IS NULL)
-				  AND clientId = :clientId
-				GROUP BY 
-					project.id,
-					project.name,
-					project.clientId
-				ORDER BY clientName, project.name";
+					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets
+                FROM zp_relationuserproject 
+				    LEFT JOIN zp_projects as project ON project.id = zp_relationuserproject.projectId  
+				    LEFT JOIN zp_tickets as ticket ON ticket.projectId = zp_relationuserproject.projectId  
+                 WHERE (project.active > '-1' OR project.active IS NULL) 
+                   AND 
+                       zp_relationuserproject.userId=:id
+group BY project.id
+                 ";
+
 
 
             $stmn = $this->db->database->prepare($sql);
-            $stmn->bindValue(':clientId', $clientId, PDO::PARAM_INT);
+            $stmn->bindValue(':id', $userId, PDO::PARAM_INT);
 
             $stmn->execute();
             $values = $stmn->fetchAll();
+
             $stmn->closeCursor();
 
             return $values;
@@ -223,6 +222,7 @@ namespace leantime\domain\repositories {
 					zp_projects.id, 
 					zp_projects.name, 
 					zp_projects.clientId, 
+					zp_projects.ownerId, 
 					zp_projects.details,
 					zp_projects.state,
 					zp_projects.hourBudget,
@@ -426,11 +426,11 @@ namespace leantime\domain\repositories {
         {
 
             $query = "INSERT INTO `zp_projects` (
-				`name`, `details`, `clientId`, `hourBudget`, `dollarBudget`
+				`name`, `details`, `ownerId`, `hourBudget`, `dollarBudget`
 			) VALUES (
 				:name,
 				:details,
-				:clientId,
+				:ownerId,
 				:hourBudget,
 				:dollarBudget
 			)";
@@ -439,7 +439,7 @@ namespace leantime\domain\repositories {
 
             $stmn->bindValue('name', $values['name'], PDO::PARAM_STR);
             $stmn->bindValue('details', $values['details'], PDO::PARAM_STR);
-            $stmn->bindValue('clientId', $values['clientId'], PDO::PARAM_STR);
+            $stmn->bindValue('ownerId', $values['ownerId'], PDO::PARAM_INT);
             $stmn->bindValue('hourBudget', $values['hourBudget'], PDO::PARAM_STR);
             $stmn->bindValue('dollarBudget', $values['dollarBudget'], PDO::PARAM_STR);
 
@@ -450,7 +450,7 @@ namespace leantime\domain\repositories {
             $stmn->closeCursor();
 
             //Add author to project
-            $this->addProjectRelation($_SESSION["userdata"]["id"], $projectId);
+            $this->addProjectRelation($values['ownerId'], $projectId);
 
             //Add users to relation
             if(is_array($values['assignedUsers']) === true && count($values['assignedUsers']) > 0) {
@@ -478,7 +478,7 @@ namespace leantime\domain\repositories {
             $query = "UPDATE zp_projects SET
 				name = :name, 
 				details = :details, 
-				clientId = :clientId,
+				ownerId = :ownerId,
 				state = :state,
 				hourBudget = :hourBudget,
 				dollarBudget = :dollarBudget
@@ -490,7 +490,7 @@ namespace leantime\domain\repositories {
 
             $stmn->bindValue('name', $values['name'], PDO::PARAM_STR);
             $stmn->bindValue('details', $values['details'], PDO::PARAM_STR);
-            $stmn->bindValue('clientId', $values['clientId'], PDO::PARAM_STR);
+            $stmn->bindValue('ownerId', $values['ownerId'], PDO::PARAM_INT);
             $stmn->bindValue('state', $values['state'], PDO::PARAM_STR);
             $stmn->bindValue('hourBudget', $values['hourBudget'], PDO::PARAM_STR);
             $stmn->bindValue('dollarBudget', $values['dollarBudget'], PDO::PARAM_STR);
