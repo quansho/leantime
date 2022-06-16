@@ -79,10 +79,12 @@ namespace leantime\domain\repositories {
 					project.state,
 					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets,
 					client.name AS clientName,
-					client.id AS clientId 
+					client.id AS clientId,
+              		CONCAT(user.firstname,' ', user.lastname) as ownerName
 				FROM zp_projects as project
-				LEFT JOIN zp_clients as client ON project.clientId = client.id
-				LEFT JOIN zp_tickets as ticket ON project.id = ticket.projectId  
+				    LEFT JOIN zp_clients as client ON project.clientId = client.id
+				    LEFT JOIN zp_tickets as ticket ON project.id = ticket.projectId  
+				    LEFT JOIN zp_user as user ON user.id = project.ownerId  
 				WHERE project.active > '-1' OR project.active IS NULL
 				GROUP BY 
 					project.id,
@@ -162,15 +164,16 @@ namespace leantime\domain\repositories {
 					project.hourBudget,
 					project.dollarBudget,
 					project.state,
+       				CONCAT(user.firstname,' ', user.lastname) as ownerName,
 					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets
                 FROM zp_relationuserproject 
 				    LEFT JOIN zp_projects as project ON project.id = zp_relationuserproject.projectId  
 				    LEFT JOIN zp_tickets as ticket ON ticket.projectId = zp_relationuserproject.projectId  
+				    LEFT JOIN zp_user as user ON user.id = project.ownerId  
                  WHERE (project.active > '-1' OR project.active IS NULL) 
                    AND 
                        zp_relationuserproject.userId=:id
-group BY project.id
-                 ";
+                GROUP BY project.id";
 
 
 
