@@ -42,7 +42,6 @@
 		
 			 <?php foreach($this->get('allProjects') as $row): ?>
 				<tr class='gradeA'>
-					<?php var_dump($row['ownerId']);?>
 					<td style="padding:6px;">
 						<?php echo $this->displayLink('projects.changeCurrentProject',$this->escape($row['name']), array('id' => $row['id'])) ?>
                     <td class="center"><?php $this->e($row['ownerName']); ?></td>
