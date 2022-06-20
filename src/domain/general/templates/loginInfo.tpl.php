@@ -44,6 +44,11 @@
 
         <?php } ?>
         <li>
+            <a href='https://bookascience.insidesolutions.de/builtinpm' target="_blank">
+                <?=$this->__("menu.knowledge_base")?>
+            </a>
+        </li>
+        <li>
             <a href='https://bookascience.insidesolutions.de/#help' target="_blank">
                 <?=$this->__("menu.contact_us")?>
             </a>
