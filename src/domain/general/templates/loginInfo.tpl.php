@@ -43,6 +43,11 @@
             <?php } ?>
 
         <?php } ?>
+        <li>
+            <a href='https://bookascience.insidesolutions.de/#help' target="_blank">
+                <?=$this->__("menu.contact_us")?>
+            </a>
+        </li>
         <li class="border">
             <a href='<?=BASE_URL ?>/index.php?logout=1'>
                 <?=$this->__("menu.sign_out")?>
