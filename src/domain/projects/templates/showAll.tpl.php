@@ -42,13 +42,13 @@
 		
 			 <?php foreach($this->get('allProjects') as $row): ?>
 				<tr class='gradeA'>
-					
+					<?php var_dump($row['ownerId']);?>
 					<td style="padding:6px;">
 						<?php echo $this->displayLink('projects.changeCurrentProject',$this->escape($row['name']), array('id' => $row['id'])) ?>
                     <td class="center"><?php $this->e($row['ownerName']); ?></td>
 					<td class="center"><?php echo $row['numberOfTickets']; ?></td>
-					<td class="center"><?php $this->e($row['hourBudget']); ?></td>
-					<td class="center"><?php $this->e($row['dollarBudget']); ?></td>
+					<td class="center"><?php ( $login::getUserId() == $row['ownerId'] ||  $login::userIsAtLeast('admin') ) ? $this->e($row['hourBudget']) : null; ?></td>
+					<td class="center"><?php ( $login::getUserId() == $row['ownerId'] ||  $login::userIsAtLeast('admin') ) ? $this->e($row['dollarBudget']) : null; ?></td>
 				</tr>
 			 <?php endforeach; ?>
 		

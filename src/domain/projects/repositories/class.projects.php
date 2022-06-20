@@ -73,24 +73,21 @@ namespace leantime\domain\repositories {
             $query = "SELECT
 					project.id,
 					project.name,
-					project.clientId,
+					project.ownerId,
 					project.hourBudget,
 					project.dollarBudget,
 					project.state,
 					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets,
-					client.name AS clientName,
-					client.id AS clientId,
               		CONCAT(user.firstname,' ', user.lastname) as ownerName
 				FROM zp_projects as project
-				    LEFT JOIN zp_clients as client ON project.clientId = client.id
 				    LEFT JOIN zp_tickets as ticket ON project.id = ticket.projectId  
 				    LEFT JOIN zp_user as user ON user.id = project.ownerId  
 				WHERE project.active > '-1' OR project.active IS NULL
 				GROUP BY 
 					project.id,
 					project.name,
-					project.clientId
-				ORDER BY clientName, project.name";
+					project.ownerId
+				ORDER BY project.name";
 
             $stmn = $this->db->database->prepare($query);
 
@@ -163,6 +160,7 @@ namespace leantime\domain\repositories {
 					project.name,
 					project.hourBudget,
 					project.dollarBudget,
+					project.ownerId,
 					project.state,
        				CONCAT(user.firstname,' ', user.lastname) as ownerName,
 					SUM(case when ticket.type <> 'milestone' AND ticket.type <> 'subtask' then 1 else 0 end) as numberOfTickets
