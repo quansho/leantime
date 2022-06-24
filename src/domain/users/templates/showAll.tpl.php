@@ -23,7 +23,10 @@ $roles = $this->get('roles');
 
             </div>
             <div class="col-md-6 align-right">
-
+                <span>
+                    Please note that you cannot edit or delete users since they might user their accounts to work on other projects not related to you.
+                    If you need to edit or delete a user please contact us at <a href="mailto:support@bookascience.com">support@bookascience.com</a> and we will do our best to help you.
+                </span>
             </div>
         </div>
 
