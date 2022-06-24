@@ -60,6 +60,8 @@ $helper = $this->get('helper');
                                 class="iconfa iconfa-group"></span><?php echo $this->__('label.team_members'); ?></h4>
                     <div class="form-group">
                         <?php echo $this->__('text.choose_access_for_users'); ?><br />
+                        <?php echo $this->__('links.or_hire_people'); ?><br />
+
                         <a href='<?=BASE_URL?>/users/showAll/'><?php echo $this->__('links.dont_do_it_alone'); ?></a>
                         <br /><br />
 
