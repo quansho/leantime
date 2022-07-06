@@ -61,7 +61,8 @@ namespace leantime\core {
             20103,
 			20104,
 			20105,
-            20106
+            20106,
+            20107,
         );
 
         /**
@@ -228,10 +229,13 @@ namespace leantime\core {
                 }
             }
 
+
             if ($currentDBVersion == $newDBVersion) {
                 $errors[0] = "Database is up to date! <a href='".BASE_URL."/'> Login to continue</a>";
                 return $errors;
             }
+
+
 
             //Find all update functions that need to be executed
             foreach ($this->dbUpdates as $updateVersion) {
@@ -1036,6 +1040,37 @@ namespace leantime\core {
 
                     $stmn = $this->database->prepare($statement);
                     $stmn->execute();
+
+                } catch (\PDOException $e) {
+                    array_push($errors, $statement . " Failed:" . $e->getMessage());
+                }
+
+            }
+
+            if(count($errors) > 0) {
+                return $errors;
+            }else{
+                return true;
+            }
+
+        }
+
+        private function update_sql_20107()
+        {
+            $errors = array();
+
+            $sql = array(
+                "ALTER TABLE `zp_user` ADD COLUMN `creatorId` INT(11) DEFAULT NULL",
+                "ALTER TABLE `zp_projects` ADD COLUMN `ownerId` INT(11)"
+            );
+
+            foreach ($sql as $statement) {
+
+                try {
+
+                    $stmn = $this->database->prepare($statement);
+                    $stmn->execute();
+
 
                 } catch (\PDOException $e) {
                     array_push($errors, $statement . " Failed:" . $e->getMessage());

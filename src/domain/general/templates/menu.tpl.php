@@ -31,14 +31,16 @@
                         <?php
                         $lastClient = "";
 
+
                         if(count($this->get('allProjects')) > 1) {
                             foreach ($this->get('allProjects') as $projectRow) {
 
-                                if ($lastClient != $projectRow['clientName']) {
-                                    $lastClient = $projectRow['clientName'];
-                                    echo "<li class='nav-header border openToggle' onclick='leantime.menuController.toggleClientList(".$projectRow['clientId'].", this)'>" . $this->escape($projectRow['clientName']) . " <i class=\"fa fa-caret-down\"></i></li>";
+                                if ($lastClient != $projectRow['ownerId']) {
+                                    $lastClient = $projectRow['ownerId'];
+                                    echo "<li class='nav-header border openToggle' onclick='leantime.menuController.toggleClientList(".$projectRow['ownerId'].", this)'>" . $this->escape($projectRow['ownerName']) . " <i class=\"fa fa-caret-down\"></i></li>";
                                 }
-                                echo "<li class='client_".$projectRow['clientId']."";
+
+                                echo "<li class='client_".$projectRow['ownerId']."";
                                     if ($this->get('currentProject') == $projectRow["id"]) { echo " active "; }
                                 echo"'><a href='".BASE_URL."/projects/changeCurrentProject/" . $projectRow["id"] . "'>" . $this->escape($projectRow["name"]) . "</a></li>";
                             }
@@ -46,11 +48,10 @@
                             echo "<li class='nav-header border'></li><li><span class='info'>".$this->__("menu.you_dont_have_projects")."</span></li>";
                         }
                         ?>
-                        <?php if ($login::userIsAtLeast("clientManager")) { ?>
+                        <?php if ($login::userIsAtLeast("user")) { ?>
                             <li class='nav-header border'></li>
                             <li><a href="<?=BASE_URL ?>/projects/newProject/"><?=$this->__("menu.create_project") ?></a></li>
                             <li><a href="<?=BASE_URL ?>/projects/showAll"><?=$this->__("menu.view_all_projects") ?></a></li>
-                            <li><a href="<?=BASE_URL ?>/clients/showAll"><?=$this->__("menu.view_all_clients") ?></a></li>
                         <?php } ?>
                     </ul>
                 </form>
@@ -82,7 +83,7 @@
             <li <?php if($module == 'reports') echo"class=' active '"; ?>>
                 <a href="<?=BASE_URL ?>/reports/show"><?=$this->__("menu.reports") ?></a>
             </li>
-            <?php if ($login::userIsAtLeast("clientManager")) { ?>
+            <?php if ($login::userIsAtLeast("user") && $login::getUserId() == $_SESSION['currentProjectOwner']) { ?>
                 <li <?php if($module == 'projects' && $action == 'showProject') echo"  class='active' "; ?>>
                     <a href="<?=BASE_URL ?>/projects/showProject/<?=$_SESSION['currentProject']?>"><?=$this->__("menu.project_settings") ?></a>
                 </li>

@@ -49,7 +49,7 @@ namespace leantime\domain\controllers {
             }
 
 
-            if(!core\login::userIsAtLeast("clientManager")) {
+            if(!core\login::userIsAtLeast("user")) {
                 $tpl->display('general.error');
                 exit();
             }
@@ -155,9 +155,10 @@ namespace leantime\domain\controllers {
 
 
 
+
                 $helper = new core\helper();
 
-                if(core\login::userHasRole("clientManager") && $project['clientId'] != core\login::getUserClientId()) {
+                if(core\login::userHasRole("clientManager") && $project['ownerId'] != core\login::getUserId()) {
                     $tpl->display('general.error');
                     exit();
                 }
@@ -209,10 +210,10 @@ namespace leantime\domain\controllers {
                     $values = array(
                         'name' => $_POST['name'],
                         'details' => $_POST['details'],
-                        'clientId' => $_POST['clientId'],
+                        'ownerId' => core\login::getUserId(),//TODO EDIT FOR ADMIN
                         'state' => $_POST['projectState'],
                         'hourBudget' => $_POST['hourBudget'],
-                        'assignedUsers' => $assignedUsers,
+                        'assignedUsers' => array_merge($assignedUsers,[core\login::getUserId()]),
 						'dollarBudget' => $_POST['dollarBudget']
                     );
 
@@ -419,12 +420,14 @@ namespace leantime\domain\controllers {
 
                 $user = new repositories\users();
 
-                if(core\login::userIsAtLeast("manager")) {
+                if(core\login::userIsAtLeast("admin")) {
                     $tpl->assign('availableUsers', $user->getAll());
-                    $tpl->assign('clients', $clients->getAll());
+//                    $tpl->assign('clients', $clients->getAll());
+
                 }else{
-                    $tpl->assign('availableUsers', $user->getAllClientUsers(core\login::getUserClientId()));
-                    $tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
+
+                    $tpl->assign('availableUsers', $user->getAllClientUsers(core\login::getUserId()));
+//                    $tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
                 }
                 $tpl->assign('employeeFilter', $userId);
                 $tpl->assign('employees', $employees);

@@ -1,8 +1,11 @@
 <?php
+
 defined('RESTRICTED') or die('Restricted access'); 
 $roles = $this->get('roles');
 $values = $this->get('values');
 $projects = $this->get('relations');
+/** @var leantime\core\login $login */
+
 ?>
 
 <script type="text/javascript">
@@ -100,30 +103,37 @@ $projects = $this->get('relations');
                             type="text" name="phone" id="phone"
                             value="<?php echo $values['phone'] ?>" /><br />
 
-                        <label for="role"><?php echo $this->__('label.role'); ?></label>
-                        <select name="role" id="role">
 
 
-                                <?php foreach($this->get('roles') as $key => $role){ ?>
-                                    <option value="<?php  echo $key; ?>"
-                                        <?php if($key == $values['role']) { ?> selected="selected" <?php
-                                        } ?>>
-                                        <?=$this->__("label.roles.".$role) ?>
-                                       </option>
-                                <?php } ?>
 
-                        </select> <br />
+                          <?php if ($login::userIsAtLeast("admin")) : ?>
 
-                        <label for="client"><?php echo $this->__('label.client') ?></label>
-                        <select name='client' id="client">
-                            <?php if($login::userIsAtLeast("manager")){?>
-                                <option value="0" selected="selected"><?php echo $this->__('label.no_clients') ?></option>
-                            <?php } ?>
-                            <?php foreach($this->get('clients') as $client): ?>
-                                <option value="<?php echo $client['id'] ?>" <?php if ($client['id'] == $values['clientId']) : ?>selected="selected"<?php
-                               endif; ?>><?php $this->e($client['name']) ?></option>
-                            <?php endforeach; ?>
-                        </select><br/>
+                            <label for="role"><?php echo $this->__('label.role'); ?></label>
+                            <select name="role" id="role">
+
+
+                                    <?php foreach($this->get('roles') as $key => $role){ ?>
+                                        <option value="<?php  echo $key; ?>"
+                                            <?php if($key == $values['role']) { ?> selected="selected" <?php
+                                            } ?>>
+                                            <?=$this->__("label.roles.".$role) ?>
+                                           </option>
+                                    <?php } ?>
+
+                            </select> <br />
+
+                            <?php endif; ?>
+
+<!--                        <label for="client">--><?php //echo $this->__('label.client') ?><!--</label>-->
+<!--                        <select name='client' id="client">-->
+<!--                            --><?php //if($login::userIsAtLeast("manager")){?>
+<!--                                <option value="0" selected="selected">--><?php //echo $this->__('label.no_clients') ?><!--</option>-->
+<!--                            --><?php //} ?>
+<!--                            --><?php //foreach($this->get('clients') as $client): ?>
+<!--                                <option value="--><?php //echo $client['id'] ?><!--" --><?php //if ($client['id'] == $values['clientId']) : ?><!--selected="selected"--><?php
+//                               endif; ?><!----><?php //$this->e($client['name']) ?><!--</option>-->
+<!--                            --><?php //endforeach; ?>
+<!--                        </select><br/>-->
 
                         <label for="password"><?php echo $this->__('label.password'); ?></label> <input
                             type="password" name="password" id="password" value="" autocomplete="new-password"/><br />

@@ -26,16 +26,16 @@ namespace leantime\domain\controllers {
             $user = new repositories\users();
             $language = new core\language();
 
-
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
-            $input = file_get_contents('php://input');
-            $postData = json_decode($input);
-            $_POST = (array) $postData;
+            if($isApiCall)
+            {
+                $input = file_get_contents('php://input');
+                $postData = json_decode($input);
+                $_POST = (array) $postData;
+            }
 
             if(core\login::userIsAtLeast("manager")) {
-
-
 
                 $values = array(
                     'name' => '',

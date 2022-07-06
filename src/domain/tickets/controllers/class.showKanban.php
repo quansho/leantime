@@ -54,6 +54,7 @@ namespace leantime\domain\controllers {
 
             $this->tpl->assign('currentSprint', $_SESSION["currentSprint"]);
             $this->tpl->assign('allSprints', $this->sprintService->getAllSprints($_SESSION["currentProject"]));
+            $this->tpl->assign('isOwner', core\login::getUserId() == $_SESSION["currentProjectOwner"]);
 
             $this->tpl->display('tickets.showKanban');
 

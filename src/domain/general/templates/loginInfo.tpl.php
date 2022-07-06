@@ -13,7 +13,7 @@
                 <?=$this->__("menu.my_profile")?>
             </a>
         </li>
-        <?php if ($login::userIsAtLeast("clientManager")) { ?>
+        <?php if ($login::userIsAtLeast("user")) { ?>
 
         <li class="nav-header border"><?=$this->__("label.administration")?></li>
 
@@ -23,11 +23,11 @@
                 </a>
             </li>
 
-            <li <?php if($module == 'clients') echo" class='active' "; ?>>
-                <a href='<?=BASE_URL ?>/clients/showAll/'>
-                    <?=$this->__("menu.all_clients")?>
-                </a>
-            </li>
+<!--            <li --><?php //if($module == 'clients') echo" class='active' "; ?><!---->
+<!--                <a href='--><?//=BASE_URL ?><!--/clients/showAll/'>-->
+<!--                    --><?//=$this->__("menu.all_clients")?>
+<!--                </a>-->
+<!--            </li>-->
             <li <?php if($module == 'users') echo" class='active' "; ?>>
                 <a href='<?=BASE_URL ?>/users/showAll/'>
                     <?=$this->__("menu.all_users")?>
@@ -43,25 +43,13 @@
             <?php } ?>
 
         <?php } ?>
-        <li class="nav-header border"><?=$this->__("menu.help_support")?></li>
         <li>
-            <a href='javascript:void(0);'
-               onclick="leantime.helperController.showHelperModal('<?php echo $this->get('modal'); ?>');">
-                <?=$this->__("menu.show_me_around")?>
-            </a>
-        </li>
-        <li>
-            <a href='http://docs.leantime.io' target="_blank">
+            <a href='https://bookascience.insidesolutions.de/builtinpm' target="_blank">
                 <?=$this->__("menu.knowledge_base")?>
             </a>
         </li>
         <li>
-            <a href='http://community.leantime.io' target="_blank">
-                <?=$this->__("menu.community")?>
-            </a>
-        </li>
-        <li>
-            <a href='https://leantime.io/contact-us' target="_blank">
+            <a href='https://bookascience.insidesolutions.de/#help' target="_blank">
                 <?=$this->__("menu.contact_us")?>
             </a>
         </li>

@@ -31,12 +31,14 @@ namespace leantime\domain\controllers {
 
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
-            $input = file_get_contents('php://input');
-            $postData = json_decode($input);
-            $_POST = (array) $postData;
+            if($isApiCall)
+            {
+                $input = file_get_contents('php://input');
+                $postData = json_decode($input);
+                $_POST = (array) $postData;
+            }
 
-
-            if(!core\login::userIsAtLeast("clientManager")) {
+            if(!core\login::userIsAtLeast("user")) {
                 $tpl->display('general.error');
                 exit();
             }
@@ -46,7 +48,6 @@ namespace leantime\domain\controllers {
                 'id' => '',
                 'name' => '',
                 'details' => '',
-                'clientId' => '',
                 'hourBudget' => '',
                 'assignedUsers' => array($_SESSION['userdata']['id']),
                 'dollarBudget' => '',
@@ -74,8 +75,8 @@ namespace leantime\domain\controllers {
                 $values = array(
                     'name' => $_POST['name'],
                     'details' => $_POST['details'],
-                    'clientId' => $_POST['clientId'],
                     'hourBudget' => $hourBudget,
+                    'ownerId' => ($isApiCall)  ? $_POST['ownerId'] : core\login::getUserId(),
                     'assignedUsers' => $assignedUsers,
                     'dollarBudget' => $_POST['dollarBudget'],
                     'state' => $_POST['projectState'],
@@ -85,11 +86,6 @@ namespace leantime\domain\controllers {
 
                     $tpl->setNotification($language->__("notification.no_project_name"), 'error');
 
-                } elseif ($values['clientId'] === '') {
-
-
-                    $tpl->setNotification($language->__("notification.no_client"), 'error');
-
                 } else {
 
                     $projectName = $values['name'];
@@ -97,7 +93,8 @@ namespace leantime\domain\controllers {
 
                     if($isApiCall)
                     {
-                        echo json_encode(['id'=>$id]);exit();
+                        echo json_encode(['id'=>$id]);
+                        exit();
                     }
 
                     $projectService->changeCurrentSessionProject($id);
@@ -152,10 +149,10 @@ namespace leantime\domain\controllers {
 
             if(core\login::userIsAtLeast("manager")) {
                 $tpl->assign('availableUsers', $user->getAll());
-                $tpl->assign('clients', $clients->getAll());
+//                $tpl->assign('clients', $clients->getAll());
             }else{
-                $tpl->assign('availableUsers', $user->getAllClientUsers(core\login::getUserClientId()));
-                $tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
+                $tpl->assign('availableUsers', $user->getAllClientUsers(core\login::getUserId()));
+//                $tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
             }
 
             $tpl->assign('info', $msgKey);

@@ -56,6 +56,10 @@ class config
     public $bindUser = ""; //ldap user that can search directory. (Should be read only)
     public $bindPassword = "";
 
+    public $intranetAccessToken = "";
+    public $intranetUserName = "";
+    public $intranetUserPass = "";
+
     //Default ldap keys in your directory.
     public $ldapKeys = '{ 
         "username":"uid",

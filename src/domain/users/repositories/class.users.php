@@ -198,25 +198,29 @@ namespace leantime\domain\repositories {
          * @access public
          * @return array
          */
-        public function getAllClientUsers($clientId)
+        public function getAllClientUsers($clientId): array
         {
 
             $query = "SELECT 
-                        zp_user.id, 
+                        id, 
                         lastname, 
                         firstname, 
                         role, 
                         profileId, 
                         username,
                         twoFAEnabled,
-                        zp_clients.name AS clientName
+                        creatorId
 					FROM `zp_user` 
-					LEFT JOIN zp_clients ON zp_clients.id = zp_user.clientId
-					WHERE clientId = :clientId 
+					WHERE creatorId = :creatorId OR id IN (
+					    SELECT userId 
+					    FROM zp_relationuserproject
+					    WHERE projectId 
+					              IN (SELECT id FROM zp_projects WHERE ownerId = :creatorId)
+					) AND id <> :creatorId
 					ORDER BY lastname";
 
             $stmn = $this->db->database->prepare($query);
-            $stmn->bindValue(':clientId', $clientId, PDO::PARAM_STR);
+            $stmn->bindValue(':creatorId', (int)$clientId, PDO::PARAM_INT);
 
             $stmn->execute();
             $values = $stmn->fetchAll();
@@ -401,7 +405,7 @@ namespace leantime\domain\repositories {
 							username, 
 							role,
 					        notifications,
-							clientId, 
+							creatorId, 
 							password,
 							source
 						) VALUES (
@@ -411,7 +415,7 @@ namespace leantime\domain\repositories {
 							:user,
 							:role,
 							1,
-							:clientId,
+							:creatorId,
 							:password,
 							:source
 						)";
@@ -425,7 +429,7 @@ namespace leantime\domain\repositories {
             $stmn->bindValue(':role', $values['role'], PDO::PARAM_STR);
 
             $stmn->bindValue(':password', $values['password'], PDO::PARAM_STR);
-            $stmn->bindValue(':clientId', $values['clientId'], PDO::PARAM_INT);
+            $stmn->bindValue(':creatorId', $values['creatorId'], PDO::PARAM_INT);
 
             if(isset($values['source'])){
                 $stmn->bindValue(':source', $values['source'], PDO::PARAM_STR);

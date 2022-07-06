@@ -210,7 +210,7 @@
 						<div class="column" style="width:<?=$size?>%;">
 
                             <h4 class="widgettitle title-primary titleBorderColor<?php echo $key; ?>">
-                            <?php if ($login::userIsAtLeast("clientManager")) { ?>
+                            <?php if ($login::userIsAtLeast("user") && $this->get('isOwner')) { ?>
                                 <a href="<?=BASE_URL ?>/setting/editBoxLabel?module=ticketlabels&label=<?=$key?>" class="editLabelModal editHeadline"><i class="fas fa-edit"></i></a>
                             <?php } ?>
                                 <strong class="count">0</strong>
@@ -244,7 +244,7 @@
                                             <div class="col-md-12">
                                                 <?php
 
-                                                if ($login::userIsAtLeast("developer")) {
+                                                if ($login::userIsAtLeast("user")) {
                                                     $clockedIn = $this->get("onTheClock");
 
                                                     ?>
@@ -256,8 +256,12 @@
                                                         <ul class="dropdown-menu">
                                                             <li class="nav-header"><?php echo $this->__("subtitles.todo"); ?></li>
                                                             <li><a href="<?=BASE_URL ?>/tickets/showTicket/<?php echo $row["id"]; ?>"><i class="fa fa-edit"></i> <?php echo $this->__("links.edit_todo"); ?></a></li>
-                                                            <li><a href="<?=BASE_URL ?>/tickets/delTicket/<?php echo $row["id"]; ?>" class="delete"><i class="fa fa-trash"></i> <?php echo $this->__("links.delete_todo"); ?></a></li>
+
+                                                            <?php if ($login::userIsAtLeast("user") && $this->get("isOwner")) : ?>
+                                                                <li><a href="<?=BASE_URL ?>/tickets/delTicket/<?php echo $row["id"]; ?>" class="delete"><i class="fa fa-trash"></i> <?php echo $this->__("links.delete_todo"); ?></a></li>
+                                                            <?php endif;?>
                                                             <li class="nav-header border"><?php echo $this->__("subtitles.track_time"); ?></li>
+
                                                             <li id="timerContainer-<?php echo $row['id'];?>" class="timerContainer">
                                                                 <a class="punchIn" href="javascript:void(0);" data-value="<?php echo $row["id"]; ?>" <?php if($clockedIn !== false) { echo"style='display:none;'"; }?>><span class="iconfa-time"></span> <?php echo $this->__("links.start_work"); ?></a>
                                                                 <a class="punchOut" href="javascript:void(0);" data-value="<?php echo $row["id"]; ?>" <?php if($clockedIn === false || $clockedIn["id"] != $row["id"]) { echo"style='display:none;'"; }?>><span class="iconfa-stop"></span> <?php if(is_array($clockedIn) == true) { echo sprintf($this->__("links.stop_work_started_at"), date($this->__("language.timeformat"), $clockedIn["since"])); }else{ echo sprintf($this->__("links.stop_work_started_at"), date($this->__("language.timeformat"), time())); }?></a>

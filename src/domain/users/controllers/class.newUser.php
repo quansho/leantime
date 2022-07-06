@@ -23,10 +23,13 @@ namespace leantime\domain\controllers {
 
             $headerAccepts = getallheaders()['Accept'];
             $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
-            $input = file_get_contents('php://input');
-            $postData = json_decode($input);
-            $_POST = (array) $postData;
 
+            if($isApiCall)
+            {
+                $input = file_get_contents('php://input');
+                $postData = json_decode($input);
+                $_POST = (array) $postData;
+            }
 
             $values = array(
 				'firstname' => "",
@@ -40,7 +43,7 @@ namespace leantime\domain\controllers {
 
 
 			//only Admins
-			if (core\login::userIsAtLeast("clientManager")) {
+//			if (core\login::userIsAtLeast("clientManager")) {
 
 				$projectrelation = array();
 				if (isset($_POST['save'])) {
@@ -51,16 +54,17 @@ namespace leantime\domain\controllers {
 						'lastname' => ($_POST['lastname']),
 						'user' => ($_POST['user']),
 						'phone' => ($_POST['phone']),
-						'role' => ($_POST['role']),
+						'role' => (core\login::userIsAtLeast("admin")) ? ($_POST['role']) : 15,//TODO MAGIC 15
 						'password' => (password_hash($_POST['password'], PASSWORD_DEFAULT)),
-						'clientId' => ($_POST['client'])
+						'creatorId' => core\login::getUserId(),
+//						'clientId' => ($_POST['client'])
 					);
 
 					//Choice is an illusion for client managers
-					if (core\login::userHasRole("clientManager")) {
-
-                        $values['clientId'] = core\login::getUserClientId();
-					}
+//                if (core\login::userHasRole("clientManager") && !$isApiCall) {
+//
+//                        $values['clientId'] = core\login::getUserClientId();
+//				}
 
 					if ($values['user'] !== '') {
 
@@ -89,14 +93,13 @@ namespace leantime\domain\controllers {
 
 										$to = array($values["user"]);
 
-                                        if(!$isApiCall)
+                                        if($isApiCall)
                                         {
-                                            $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
-                                        }else{
                                             echo json_encode(['id'=>$userId]);
                                             exit();
                                         }
 
+                                        $mailer->sendMail($to, $_SESSION["userdata"]["name"]);
 
 										$tpl->setNotification($language->__("notification.user_created"), 'success');
 
@@ -108,7 +111,7 @@ namespace leantime\domain\controllers {
 
                                             if($isApiCall)
                                             {
-                                                echo json_encode(['message'=>$messageInfo,'type'=>'error'],301);
+                                                echo json_encode(['message'=>$messageInfo,'type'=>'error','status'=>300]);
                                                 exit();
                                             }else{
                                                 $tpl->setNotification($messageInfo, 'error');
@@ -116,40 +119,64 @@ namespace leantime\domain\controllers {
 
 									}
 								} else {
-                                    echo json_encode(['id'=>'asd']);
-                                    exit();
-									$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
+                                    $message = $language->__("notification.passwords_dont_match");
+
+                                    if($isApiCall)
+                                    {
+                                        echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                                        exit();
+                                    }
+
+                                    $tpl->setNotification($message, 'error');
 								}
 							} else {
-                                echo json_encode(['id'=>'asdss']);
-                                exit();
-								$tpl->setNotification($language->__("notification.no_valid_email"), 'error');
+                                $message = $language->__("notification.no_valid_email");
+
+                                if($isApiCall)
+                                {
+                                    echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                                    exit();
+                                }
+
+                                $tpl->setNotification($message, 'error');
+
 							}
 						} else {
-                            echo json_encode(['id'=>'a23sd']);
-                            exit();
-							$tpl->setNotification($language->__("notification.passwords_dont_match"), 'error');
 
+                            $message = $language->__("notification.passwords_dont_match");
+
+                            if($isApiCall)
+                            {
+                                echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                                exit();
+                            }
+
+                            $tpl->setNotification($message, 'error');
 						}
 					} else {
-                        echo json_encode(['id'=>'a23231sd']);
-                        exit();
-						$tpl->setNotification($language->__("notification.enter_email"), 'error');
+                        $message = $language->__("notification.enter_email");
+
+                        if($isApiCall)
+                        {
+                            echo json_encode(['message'=>$message,'type'=>'error','status'=>300]);
+                            exit();
+                        }
+
+                        $tpl->setNotification($message, 'error');
 					}
 				}
-				exit();
 
 				$tpl->assign('values', $values);
 				$clients = new repositories\clients();
 
 				if (core\login::userIsAtLeast("manager")) {
-					$tpl->assign('clients', $clients->getAll());
+//					$tpl->assign('clients', $clients->getAll());
 					$tpl->assign('allProjects', $project->getAll());
 					$tpl->assign('roles', core\login::$userRoles);
 				} else {
 
-					$tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
-					$tpl->assign('allProjects', $project->getClientProjects(core\login::getUserClientId()));
+//					$tpl->assign('clients', array($clients->getClient(core\login::getUserClientId())));
+					$tpl->assign('allProjects', $project->getClientProjects(core\login::getUserId()));
 					$tpl->assign('roles', core\login::$clientManagerRoles);
 				}
 				$tpl->assign('relations', $projectrelation);
@@ -157,11 +184,12 @@ namespace leantime\domain\controllers {
 
 				$tpl->display('users.newUser');
 
-			} else {
-
-				$tpl->display('general.error');
-
-			}
+//			}
+//            else {
+//
+//				$tpl->display('general.error');
+//
+//			}
 
 		}
 

@@ -124,6 +124,7 @@ namespace leantime\core {
 
         public static $userRoles = array(
             10   => 'client',
+            15   => 'user',
             20   => 'developer',
             30   => 'clientManager',
             40   => 'manager',
@@ -136,6 +137,7 @@ namespace leantime\core {
          */
         public static $clientManagerRoles = array(
             10   => 'client',
+            15   => 'user',
             20   => 'developer',
             30   => 'clientManager'
         );
@@ -494,6 +496,7 @@ namespace leantime\core {
                 unset($_SESSION['template']);
                 unset($_SESSION["subdomainData"]);
                 unset($_SESSION["currentProject"]);
+                unset($_SESSION["currentProjectOwner"]);
                 unset($_SESSION["currentSprint"]);
                 unset($_SESSION["projectsettings"]);
                 unset($_SESSION['currentSubscription']);

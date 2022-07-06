@@ -46,7 +46,7 @@ namespace leantime\domain\controllers {
         public function get($params)
         {
 
-            if(core\login::userIsAtLeast("clientManager")) {
+            if(core\login::userIsAtLeast("user")) {
 
                 $currentLabel = "";
 
@@ -92,6 +92,17 @@ namespace leantime\domain\controllers {
          */
         public function post($params)
         {
+            $projectRepo = new repositories\projects();
+
+            $cond = (core\login::userIsAtLeast("user") && $projectRepo->getProject($_SESSION['currentProject'])['ownerId'] == core\login::getUserId() )
+                    ||
+                    core\login::userIsAtLeast("admin");
+
+            if(!$cond)
+            {
+                $this->tpl->display('general.error');
+            }
+
             //If ID is set its an update
 
             if (isset($_GET['module']) && isset($_GET['label'])) {
