@@ -16,16 +16,52 @@ namespace leantime\domain\controllers {
 		public function run()
 		{
 
+
 			$tpl = new core\template();
+
+            $headerAccepts = getallheaders()['Accept'];
+            $isApiCall = (isset($headerAccepts) && $headerAccepts == 'application/json');
+
+
+            if($isApiCall)
+            {
+                $input = file_get_contents('php://input');
+                $postData = json_decode($input);
+                $_POST = (array) $postData;
+
+            }
+
+            $userRepo = new repositories\users();
+            if (isset($_POST['update'])) {
+
+
+                $row = $userRepo->getUser($_POST['user_internal_id']);
+
+
+                $values = array(
+                    'firstname' => ($_POST['firstname'] ?? $row['firstname']),
+                    'lastname' => ($_POST['lastname'] ??  $row['lastname']),
+                    'username' => ($_POST['user'] ?? $row['username']),
+                );
+                $userRepo->patchUser($row['id'],$values );
+
+                echo json_encode($values);
+                exit();
+            }
 
 			//Only admins
 			if (core\login::userIsAtLeast("clientManager")) {
 
-				if (isset($_GET['id']) === true) {
+                $project = new repositories\projects();
+                $userRepo = new repositories\users();
+                $language = new core\language();
 
-					$project = new repositories\projects();
-					$userRepo = new repositories\users();
-					$language = new core\language();
+
+
+
+                if (isset($_GET['id']) === true) {
+
+
 
 					$id = (int)($_GET['id']);
 					$row = $userRepo->getUser($id);
